@@ -9,13 +9,15 @@ public class Movie {
 	private String date;
 	private String URL;
 	private String ID;
+	private String creationTime;
 	private Bitmap poster;
 	
-	public Movie (String title, String date, String url, String ID) {
+	public Movie (String title, String date, String url, String ID, String creationTime) {
 		setTitle(title);
 		setDate(date);
 		setURL(url);
-		setID(ID);
+		setID(ID); //Currently unused
+		setCreationTime(creationTime);
 	}
 	
 	public String getTitle() {
@@ -56,5 +58,13 @@ public class Movie {
 
 	public void setID(String ID) {
 		this.ID = ID;
+	}
+
+	public String getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(String creationTime) {
+		this.creationTime = creationTime;
 	}
 }

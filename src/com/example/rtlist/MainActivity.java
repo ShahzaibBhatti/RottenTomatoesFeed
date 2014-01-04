@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -19,6 +22,7 @@ import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.graphics.BitmapFactory;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -71,7 +75,8 @@ public class MainActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Toast.makeText(getApplicationContext(),
-						myMovies.get(position).getTitle() +", ID: " + myMovies.get(position).getID(), Toast.LENGTH_SHORT)
+						myMovies.get(position).getTitle()
+						+ ", Item Creation Time: " + myMovies.get(position).getCreationTime(), Toast.LENGTH_SHORT)
 					    .show();
 			}  
         });
@@ -134,7 +139,9 @@ public class MainActivity extends ListActivity {
 	        		String tID = temp.getString("id");
 	        		JSONObject pictureJSON = new JSONObject(temp.getString("posters"));
 	        		String tPic = pictureJSON.getString("profile");
-		            myMovies.add(new Movie(tTitle, tYear, tPic, tID));
+	        		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss");
+	        		String currentDateandTime = sdf.format(new Date());
+		            myMovies.add(new Movie(tTitle, tYear, tPic, tID, currentDateandTime));
 	        	}
 	            myAdapter.notifyDataSetChanged();
 	            for (int i = 0; i < myMovies.size(); i++) {

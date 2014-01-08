@@ -223,11 +223,7 @@ public class MainActivity extends ListActivity {
     }
 
 	public void downloadBitmaps() {
-		if (bitmapQueue.isEmpty()) {
-			return;
-		}
-		
-		while (asyncImageDownloads < NUM_OF_ASYNC_IMAGE_DOWNLOADS) {
+		while (asyncImageDownloads < NUM_OF_ASYNC_IMAGE_DOWNLOADS && !bitmapQueue.isEmpty()) {
 			asyncImageDownloads++;
 			new getBitmap().execute(bitmapQueue.remove(0));
 		}

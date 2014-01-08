@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.text.format.Time;
 import android.util.Log;
@@ -31,6 +32,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,6 +49,11 @@ public class MainActivity extends ListActivity {
     int totalMovies = 0;
     int page = 1; //starting page
     boolean loading = false;
+    
+    //Custom made queue for loading bitmaps
+    final int NUM_OF_ASYNC_IMAGE_DOWNLOADS = 3;
+    int asyncImageDownloads = 0;
+    private ArrayList<Movie> bitmapQueue = new ArrayList<Movie>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +61,13 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
         
         searchBar = (EditText) findViewById(R.id.inputSearch);
-        
         searchBar.setOnEditorActionListener(new OnEditorActionListener() {
             @SuppressLint("NewApi")
 			@Override
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+                	myMovies.clear();
+                    page = 1;
                 	search(searchBar.getText().toString().replace(" ", "+"));
                 }
                 return false;
@@ -90,10 +98,8 @@ public class MainActivity extends ListActivity {
                 	loading = true;
                 	Toast.makeText(getApplicationContext(), "loading", Toast.LENGTH_SHORT).show();
                 	//execute another search without removing previous items
-                	String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=" +
-           				 searchBar.getText().toString().replace(" ", "+") +
-           				 "&page_limit=10&page=" + ++page + "&apikey=smm4764mtazphgk62e5zut7y";
-                	new SearchMovies().execute(url);
+                	page++;
+                	search(searchBar.getText().toString().replace(" ", "+"));
                 }
             }
 
@@ -103,8 +109,26 @@ public class MainActivity extends ListActivity {
 			}
         });
         
+        this.getListView().setLongClickable(true);
+        this.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+             public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+            	 if (myMovies.get(position).isLoaded()) {
+            		 Intent intent = new Intent(getBaseContext(), PosterActivity.class);
+            		 intent.putExtra("POSTER_URL", myMovies.get(position).getOriginalPictureUrl());
+            		 startActivity(intent);
+            	 }
+                 return true;
+             }
+         });
+        
         //Start off with a default search
-        search("iron+man");
+        myMovies.clear();
+        page = 1;
+        if (searchBar.getText().toString().equals("".trim())) { 
+        	search("iron+man");
+        } else {
+        	search(searchBar.getText().toString().replace(" ", "+"));
+        }
     }
 
     //Clears the list, does the requested search and outputs the results
@@ -138,15 +162,26 @@ public class MainActivity extends ListActivity {
 	        		String tYear = temp.getString("year");
 	        		String tID = temp.getString("id");
 	        		JSONObject pictureJSON = new JSONObject(temp.getString("posters"));
-	        		String tPic = pictureJSON.getString("profile");
+	        		String tPic = pictureJSON.getString("thumbnail");
+	        		
+	        		String tRating = temp.getString("mpaa_rating");
+	        		
+	        		//Want to get all the reviews
+	        		JSONObject reviewJSON = new JSONObject(temp.getString("ratings"));
+	        		String tReview = reviewJSON.getString("critics_score");
+	        		
+	        		//Store a URL to the original image, do not need to load it now, load when needed
+	        		String originalPicture = pictureJSON.getString("original");
+	        		
 	        		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss");
 	        		String currentDateandTime = sdf.format(new Date());
-		            myMovies.add(new Movie(tTitle, tYear, tPic, tID, currentDateandTime));
+		            myMovies.add(new Movie(tTitle, tYear, tPic, tID, tRating, tReview, currentDateandTime, originalPicture));
 	        	}
 	            myAdapter.notifyDataSetChanged();
 	            for (int i = 0; i < myMovies.size(); i++) {
-	            	new getBitmap().execute(myMovies.get(i));
+	            	bitmapQueue.add(myMovies.get(i));
 	            }
+	            downloadBitmaps();
 	        	loading = false;
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
@@ -165,6 +200,7 @@ public class MainActivity extends ListActivity {
 		        connection.connect();
 		        InputStream input = connection.getInputStream();
 		        params[0].setPoster(BitmapFactory.decodeStream(input));
+		        params[0].setLoaded(true);
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
@@ -174,15 +210,27 @@ public class MainActivity extends ListActivity {
 		@Override
 	    protected void onPostExecute(Movie movie) {
 	        myAdapter.notifyDataSetChanged();
+			asyncImageDownloads--;
+			downloadBitmaps();
 	    }
     }
     
     public void search(String q) {
-    	myMovies.clear();
-        page = 1;
     	String url = "http://api.rottentomatoes.com/api/public/v1.0/movies.json?q=" +
-    				 searchBar.getText().toString().replace(" ", "+") +
-    				 "&page_limit=10&page=1&apikey=smm4764mtazphgk62e5zut7y";
+  				 searchBar.getText().toString().replace(" ", "+") +
+  				 "&page_limit=10&page=" + page + "&apikey=smm4764mtazphgk62e5zut7y";
     	new SearchMovies().execute(url);
     }
+
+	public void downloadBitmaps() {
+		if (bitmapQueue.isEmpty()) {
+			return;
+		}
+		
+		while (asyncImageDownloads < NUM_OF_ASYNC_IMAGE_DOWNLOADS) {
+			asyncImageDownloads++;
+			new getBitmap().execute(bitmapQueue.remove(0));
+		}
+		
+	}
 }

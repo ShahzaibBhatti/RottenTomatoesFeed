@@ -8,16 +8,24 @@ public class Movie {
 	private String title;
 	private String date;
 	private String URL;
+	private String originalPictureUrl;
 	private String ID;
 	private String creationTime;
+	private String rating;
+	private String review;
 	private Bitmap poster;
+	private boolean loaded;
 	
-	public Movie (String title, String date, String url, String ID, String creationTime) {
+	public Movie (String title, String date, String url, String ID, String rating, String review, String creationTime, String originalPictureUrl) {
 		setTitle(title);
 		setDate(date);
 		setURL(url);
 		setID(ID); //Currently unused
 		setCreationTime(creationTime);
+		setLoaded(false);
+		setOriginalPictureUrl(originalPictureUrl);
+		setRating(rating);
+		setReview(review);
 	}
 	
 	public String getTitle() {
@@ -66,5 +74,37 @@ public class Movie {
 
 	public void setCreationTime(String creationTime) {
 		this.creationTime = creationTime;
+	}
+
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	public void setLoaded(boolean loaded) {
+		this.loaded = loaded;
+	}
+
+	public String getOriginalPictureUrl() {
+		return originalPictureUrl;
+	}
+
+	public void setOriginalPictureUrl(String originalPictureUrl) {
+		this.originalPictureUrl = originalPictureUrl;
+	}
+
+	public String getRating() {
+		return rating;
+	}
+
+	public void setRating(String rating) {
+		this.rating = rating;
+	}
+
+	public String getReview() {
+		return review;
+	}
+
+	public void setReview(String review) {
+		this.review = review;
 	}
 }

@@ -24,15 +24,19 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080004;
-        public static final int date=0x7f080002;
+        public static final int action_settings=0x7f080007;
+        public static final int date=0x7f080003;
         public static final int icon=0x7f080001;
         public static final int inputSearch=0x7f080000;
-        public static final int title=0x7f080003;
+        public static final int poster=0x7f080006;
+        public static final int rating=0x7f080004;
+        public static final int review=0x7f080005;
+        public static final int title=0x7f080002;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
         public static final int list_item=0x7f030001;
+        public static final int poster_screen=0x7f030002;
     }
     public static final class menu {
         public static final int main=0x7f070000;
@@ -44,6 +48,8 @@ public final class R {
         public static final int hello_world=0x7f050002;
         public static final int iron_man=0x7f050003;
         public static final int movie_poster=0x7f050005;
+        public static final int rating=0x7f050008;
+        public static final int review=0x7f050009;
         public static final int search_movies=0x7f050004;
         public static final int title=0x7f050007;
     }

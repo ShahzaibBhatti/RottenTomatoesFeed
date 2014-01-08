@@ -11,6 +11,8 @@
     <string name="movie_poster">Movie Poster</string>
     <string name="date">date</string>
     <string name="title">title</string>
+    <string name="rating">rating</string>
+    <string name="review">review</string>
     
 
 </resources>

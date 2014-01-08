@@ -34,10 +34,19 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 		if (i!= null) {
 			TextView movieTitle = (TextView) v.findViewById(R.id.title);
 			TextView movieDate = (TextView) v.findViewById(R.id.date);
+			TextView movieRating = (TextView) v.findViewById(R.id.rating);
+			TextView movieReview = (TextView) v.findViewById(R.id.review);
+			
 			ImageView moviePicture = (ImageView) v.findViewById(R.id.icon);
 		
 			movieTitle.setText(i.getTitle());
 			movieDate.setText(i.getDate());
+			movieRating.setText("Rated:" + i.getRating());
+			if (!i.getReview().equals("-1")) {
+				movieReview.setText("Critics Review it: " + i.getReview());
+			} else {
+				movieReview.setText("Not reviewed by critics");
+			}
 			moviePicture.setImageBitmap(i.getPoster());
 		}
 		return v;

@@ -8,9 +8,18 @@
         android:layout_width="100dp"
         android:layout_height="150dp"
         android:layout_marginRight="6dip"
-        android:contentDescription="@string/movie_poster"
-        android:src="@drawable/ic_launcher" />
+        android:contentDescription="@string/movie_poster"/>
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/icon"
+        android:layout_alignTop="@id/icon"
+        android:gravity="center_vertical"
+        android:text="@string/title"
+        android:textSize="16sp" />
+    
     <TextView
         android:id="@+id/date"
         android:layout_width="fill_parent"
@@ -21,15 +30,25 @@
         android:singleLine="true"
         android:text="@string/date"
         android:textSize="12sp" />
-
+    
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/rating"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/icon"
-        android:layout_alignTop="@id/icon"
         android:gravity="center_vertical"
-        android:text="@string/title"
+        android:layout_below="@+id/date" 
+        android:text="@string/rating"
+        android:textSize="16sp" />
+    
+    <TextView
+        android:id="@+id/review"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/icon"
+        android:layout_below="@+id/rating"
+        android:gravity="center_vertical"
+        android:text="@string/review"
         android:textSize="16sp" />
 
 </RelativeLayout> 

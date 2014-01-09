@@ -41,7 +41,13 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 		
 			movieTitle.setText(i.getTitle());
 			movieDate.setText(i.getDate());
-			movieRating.setText("Rated:" + i.getRating());
+			
+			if (i.getRating().equals("Unrated")) {
+				movieRating.setText(i.getRating());
+			} else {
+				movieRating.setText("Rated:" + i.getRating());
+			}
+			
 			if (!i.getReview().equals("-1")) {
 				movieReview.setText("Critics Review it: " + i.getReview());
 			} else {

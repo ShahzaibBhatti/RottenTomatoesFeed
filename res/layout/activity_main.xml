@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/search_movies"
         android:inputType="text"
+        android:imeOptions="actionDone"
         android:text="@string/iron_man"
         android:textColorHint="@android:color/white"
         android:textColor="@android:color/white"

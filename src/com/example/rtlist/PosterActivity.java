@@ -35,7 +35,7 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
 	//8 -> up up down down left right left right
 	//9 -> up up down down left right left right tap
 	//10 -> up up down down left right left right tap tap
-	//11 -> up up down down left right left right tap tap tap
+	//11 -> up up down down left right left right tap tap tap (will restart at this point since the code is completed)
 	
 	private GestureDetectorCompat mDetector;
 	
@@ -56,13 +56,6 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
         }
         
         mDetector = new GestureDetectorCompat(this,this);
-        
-//        moviePicture.setOnTouchListener(new OnTouchListener() {
-//            public boolean onTouch(View v, MotionEvent event) {
-//              finish();
-//              return true;
-//            }
-//        });
     }
 	
 	//TODO This code is very similar to the one in main class, make a common method
@@ -102,7 +95,6 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
 			inCode = true;
 		} else if (konamiCount == 10) {
 			//If they successfully put in the Konami code, open the Rotten Tomatoes Nicolas Cage site
-			String url = "http://www.example.com";
 			Intent i = new Intent(Intent.ACTION_VIEW);
 			i.setData(Uri.parse("http://www.rottentomatoes.com/mobile/celebrity/nicolas_cage/"));
 			konamiCount = 0;

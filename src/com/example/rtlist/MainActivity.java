@@ -23,7 +23,6 @@ import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -45,15 +44,18 @@ public class MainActivity extends ListActivity {
 	private ArrayList<Movie> myMovies = new ArrayList<Movie>();
 	private MovieAdapter myAdapter;
 	private EditText searchBar;
-	String myJSON;
-    int totalMovies = 0;
+	
+	final String FIRST_SEARCH = "Toy Story";
+	
+	
+    int totalMovies = 0; //Total number of movies rotten tomatoes has on the given search parameter.
     int page = 1; //starting page
-    boolean loading = false;
+    boolean loading = false; //true when program is grabbing the movie list JSON
     
-    //Custom made queue for loading bitmaps
-    final int NUM_OF_ASYNC_IMAGE_DOWNLOADS = 3;
-    int asyncImageDownloads = 0;
-    private ArrayList<Movie> bitmapQueue = new ArrayList<Movie>();
+    // Variables associated with the custom made queue for loading bitmaps
+    final int NUM_OF_ASYNC_IMAGE_DOWNLOADS = 3; //Total number of bitmaps that you're allowing to be downloading at once
+    int asyncImageDownloads = 0; //Number of bitmap currently being downloaded
+    private ArrayList<Movie> bitmapQueue = new ArrayList<Movie>(); //list of movies with bitmaps to download
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,9 @@ public class MainActivity extends ListActivity {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                 	myMovies.clear();
+                	bitmapQueue.clear();
                     page = 1;
-                	search(searchBar.getText().toString().replace(" ", "+"));
+                	search(searchBar.getText().toString().replace(" ", "+")); //Rotten tomatoes way in URLS to deal with spaces
                 }
                 return false;
             }
@@ -78,6 +81,7 @@ public class MainActivity extends ListActivity {
         setListAdapter(myAdapter);
         
         ListView listView = getListView();
+        //When the user clicks an item, present the time
         listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -97,7 +101,7 @@ public class MainActivity extends ListActivity {
                 if (firstVisibleItem + visibleItemCount >= totalItemCount && !loading && totalMovies > myMovies.size()) {
                 	loading = true;
                 	Toast.makeText(getApplicationContext(), "loading", Toast.LENGTH_SHORT).show();
-                	//execute another search without removing previous items
+                	//execute another search on the next page without removing previous items
                 	page++;
                 	search(searchBar.getText().toString().replace(" ", "+"));
                 }
@@ -110,6 +114,7 @@ public class MainActivity extends ListActivity {
         });
         
         this.getListView().setLongClickable(true);
+        //On long press, start a new activity with just the poster
         this.getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
              public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
             	 if (myMovies.get(position).isLoaded()) {
@@ -125,7 +130,7 @@ public class MainActivity extends ListActivity {
         myMovies.clear();
         page = 1;
         if (searchBar.getText().toString().equals("".trim())) { 
-        	search("iron+man");
+        	search("FIRST_SEARCH");
         } else {
         	search(searchBar.getText().toString().replace(" ", "+"));
         }
@@ -161,6 +166,7 @@ public class MainActivity extends ListActivity {
 	        		String tTitle = temp.getString("title");
 	        		String tYear = temp.getString("year");
 	        		String tID = temp.getString("id");
+	        		//All the posters are embedded into an internal JSON, so grab that
 	        		JSONObject pictureJSON = new JSONObject(temp.getString("posters"));
 	        		String tPic = pictureJSON.getString("thumbnail");
 	        		

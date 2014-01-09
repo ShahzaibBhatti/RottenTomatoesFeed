@@ -45,7 +45,7 @@ public class MainActivity extends ListActivity {
 	private MovieAdapter myAdapter;
 	private EditText searchBar;
 	
-	final String FIRST_SEARCH = "Toy Story";
+	final String FIRST_SEARCH = "iron_man";
 	
 	
     int totalMovies = 0; //Total number of movies rotten tomatoes has on the given search parameter.

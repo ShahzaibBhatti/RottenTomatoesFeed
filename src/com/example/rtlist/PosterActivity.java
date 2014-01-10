@@ -23,8 +23,8 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
 	ImageView moviePicture;
 	final int MIN_SWIPE_DISTANCE = 120;
 	final int MIN_SWIPE_VELOCITY = 200;
-	int konamiCount = 0;
-	boolean inCode = true;
+	int konamiCount;
+	boolean inKonamiCode = true;
 	//Will be 1 after an up fling
 	//2 -> up up
 	//3 -> up up down
@@ -55,6 +55,7 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
         	finish();	
         }
         
+        konamiCount = 0;
         mDetector = new GestureDetectorCompat(this,this);
     }
 	
@@ -92,7 +93,7 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
 	public boolean onDown(MotionEvent e) {
 		if (konamiCount == 8 || konamiCount == 9) {
 			konamiCount++;
-			inCode = true;
+			inKonamiCode = true;
 		} else if (konamiCount == 10) {
 			//If they successfully put in the Konami code, open the Rotten Tomatoes Nicolas Cage site
 			Intent i = new Intent(Intent.ACTION_VIEW);
@@ -106,12 +107,19 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		if (e1.getX() - e2.getX() > MIN_SWIPE_DISTANCE
+		//If you swipe left or right the correct velocity or up, go back
+		if ((e2.getX() - e1.getX() > MIN_SWIPE_DISTANCE ||
+                e1.getX() - e2.getX() > MIN_SWIPE_DISTANCE)
+                && Math.abs(velocityX) > MIN_SWIPE_VELOCITY
+                && e1.getY() - e2.getY() > MIN_SWIPE_DISTANCE
+                && Math.abs(velocityY) > MIN_SWIPE_VELOCITY) {
+			finish();
+		} else if (e1.getX() - e2.getX() > MIN_SWIPE_DISTANCE
                 && Math.abs(velocityX) > MIN_SWIPE_VELOCITY) {
 			//LEFT CASE
 			if (konamiCount == 4 || konamiCount == 6) {
         		konamiCount++;
-        		inCode = true;
+        		inKonamiCode = true;
         	}
 			return true;
         } else if (e2.getX() - e1.getX() > MIN_SWIPE_DISTANCE
@@ -119,7 +127,7 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
         	//RIGHT CASE
         	if (konamiCount == 5 || konamiCount == 7) {
         		konamiCount++;
-        		inCode = true;
+        		inKonamiCode = true;
         	}
 			return true;
         }  else if (e1.getY() - e2.getY() > MIN_SWIPE_DISTANCE
@@ -127,7 +135,7 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
         	//UP CASE
         	if (konamiCount == 0 || konamiCount == 1) {
         		konamiCount++;
-        		inCode = true;
+        		inKonamiCode = true;
         	}
 			return true;
         }  else if (e2.getY() - e1.getY() > MIN_SWIPE_DISTANCE
@@ -135,7 +143,7 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
         	//DOWN CASE
         	if (konamiCount == 2 || konamiCount == 3) {
         		konamiCount++;
-        		inCode = true;
+        		inKonamiCode = true;
         	}
 			return true;
         }
@@ -144,7 +152,7 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
 
 	@Override
 	public void onLongPress(MotionEvent e) {
-		finish();
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -162,10 +170,10 @@ public class PosterActivity extends Activity implements GestureDetector.OnGestur
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		if (!inCode) {
+		if (!inKonamiCode) {
 			konamiCount = 0;
 		}
-		inCode = false;
+		inKonamiCode = false;
 		return true;
 	}
 	

@@ -45,7 +45,7 @@ public class MainActivity extends ListActivity {
 	private MovieAdapter myAdapter;
 	private EditText searchBar;
 	
-	final String FIRST_SEARCH = "iron_man";
+	final String FIRST_SEARCH = "iron man";
 	
 	
     int totalMovies = 0; //Total number of movies rotten tomatoes has on the given search parameter.
@@ -71,6 +71,7 @@ public class MainActivity extends ListActivity {
                 	myMovies.clear();
                 	bitmapQueue.clear();
                     page = 1;
+                	Toast.makeText(getApplicationContext(), "Searching", Toast.LENGTH_SHORT).show();
                 	search(searchBar.getText().toString().replace(" ", "+")); //Rotten tomatoes way in URLS to deal with spaces
                 }
                 return false;
@@ -98,9 +99,9 @@ public class MainActivity extends ListActivity {
             public void onScroll(AbsListView view, int firstVisibleItem, 
                 int visibleItemCount, int totalItemCount) {
                 //Check if the last view is visible
-                if (firstVisibleItem + visibleItemCount >= totalItemCount && !loading && totalMovies > myMovies.size()) {
+                if (firstVisibleItem + visibleItemCount >= totalItemCount && !myMovies.isEmpty() && !loading && totalMovies > myMovies.size()) {
                 	loading = true;
-                	Toast.makeText(getApplicationContext(), "loading", Toast.LENGTH_SHORT).show();
+                	Toast.makeText(getApplicationContext(), "Loading", Toast.LENGTH_SHORT).show();
                 	//execute another search on the next page without removing previous items
                 	page++;
                 	search(searchBar.getText().toString().replace(" ", "+"));
@@ -129,11 +130,8 @@ public class MainActivity extends ListActivity {
         //Start off with a default search
         myMovies.clear();
         page = 1;
-        if (searchBar.getText().toString().equals("".trim())) { 
-        	search("FIRST_SEARCH");
-        } else {
-        	search(searchBar.getText().toString().replace(" ", "+"));
-        }
+    	Toast.makeText(getApplicationContext(), "Searching", Toast.LENGTH_SHORT).show();
+        search("FIRST_SEARCH");
     }
 
     //Clears the list, does the requested search and outputs the results

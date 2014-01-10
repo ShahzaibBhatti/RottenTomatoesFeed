@@ -53,10 +53,12 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 			
 			if (!i.getReview().equals("-1")) {
 				movieReview.setText("Critics Review it: " + i.getReview());
-				//Rating bar:
+				
+				//Physical rating bar properties:
 				ratingBar.setVisibility(View.VISIBLE);
 				ratingBarBackground.setVisibility(View.VISIBLE);
 				ratingBarNegative.setVisibility(View.VISIBLE);
+				
 				int myRating = Integer.parseInt(i.getReview());
 				if (myRating > 50) {
 					ratingBar.setBackgroundColor(Color.GREEN);
@@ -71,8 +73,8 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ratingBar.getLayoutParams());
 				layoutParams.width = convertDpToPixel(barWidth, getContext());
 				layoutParams.setMargins(convertDpToPixel(2, getContext()), convertDpToPixel(2, getContext()), 0, 0);
-				
 				ratingBar.setLayoutParams(layoutParams);
+				
 			} else {
 				movieReview.setText("Not reviewed by critics");
 				//If there is no rating just remove the bar

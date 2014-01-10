@@ -14,6 +14,8 @@
     <string name="rating">rating</string>
     <string name="review">review</string>
     
+    <string name="search_logo">search logo</string>
+    
     <string name="rect_image">he grey background of the rating bar</string>
     <string name="rating_bar_negative">The negative color of the rating bar</string>
     <string name="rating_bar">he overlay equal to the amount of rating the movie had</string>

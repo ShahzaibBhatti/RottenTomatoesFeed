@@ -163,6 +163,10 @@ public class MainActivity extends ListActivity {
 	        		JSONObject temp = jArray.getJSONObject(i);
 	        		String tTitle = temp.getString("title");
 	        		String tYear = temp.getString("year");
+	        		JSONObject releaseDates = new JSONObject(temp.getString("release_dates"));
+	        		if (releaseDates.has("theater")) {
+	        				tYear = releaseDates.getString("theater");
+	        		}
 	        		String tID = temp.getString("id");
 	        		//All the posters are embedded into an internal JSON, so grab that
 	        		JSONObject pictureJSON = new JSONObject(temp.getString("posters"));
